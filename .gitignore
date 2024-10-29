@@ -12,7 +12,7 @@ valid_bm25_scores
 *.pdf
 *.jpg
 *.zip
-# *.csv
+*.csv
 *.pkl
 *.pt
 *-ubyte
