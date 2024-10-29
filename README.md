@@ -18,3 +18,4 @@ $ mkdir -p $TMPDIR
 $ pip install --upgrade pip
 $ pip install -r requirements.txt
 ```
+-깃헙 연동 테스트-
