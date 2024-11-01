@@ -32,32 +32,58 @@ torch.cuda.manual_seed_all(seed)
 # [|assistant|]'''
 
 EXAONE_FEW_SHOT_TEMP = '''[|system|] You are EXAONE model from LG AI Research, a helpful assistant. [|endofturn|]
-[|user|] 다음 뉴스의 헤드라인을 보고 맞춤법을 교정해줘. 답변은 간결하고 단답으로 해. 설명은 절대 하지마.
+[|user|] 다음 뉴스의 헤드라인을 보고 맞춤법을 교정해줘. 답변은 간결하고 단답으로 해. 교정할게 없으면 원본 그대로 답변해.
 {}
 
 예시 1:
+주제 : 경제
 원본: NH투자 1월 옵션 만기일 매도 우세
 교정: NH투자 1월 옵션 만기일 매도 우세
 
-예시 2:
+예시 2: 
+주제 : IT과학
 원본: 정i :파1 미사z KT( 이용기간 2e 단] Q분종U2보
 교정: 정부, '주파수 미사용' KT에 이용기간 2년 단축 처분(종합2보)
 
 예시 3:
+주제 : 정치
 원본: K찰.국DLwo 로L3한N% 회장 2 T0&송=
 교정: 경찰, '국회 불법 로비' 한어총 회장 등 20명 송치
 
 예시 4:
+주제 : 정치
 원본: m 김정) 자주통일 새,?r열1나가야1보
 교정: 김정은 "자주통일 새시대 열어나가야"(2보)
 
 예시 5:
+주제 : 정치
 원본: pI美대선I앞두고 R2fr단 발] $비해 감시 강화
 교정: 軍 "美대선 앞두고 北 무수단 발사 대비해 감시 강화"
 
 예시 6:
+주제 : 스포츠
 원본: 프로야구~롯TKIAs광주 경기 y천취소
 교정: 프로야구 롯데-KIA 광주 경기 우천취소
+
+예시 7:
+주제 : 경제
+원본: NH투자 1월 옵션 만기일 매도 우세
+교정: NH투자 1월 옵션 만기일 매도 우세
+
+예시 8:
+주제 : 경제
+원본: NH투자 1월 옵션 만기일 매도 우세
+교정: NH투자 1월 옵션 만기일 매도 우세
+
+예시 9:
+주제 : 경제
+원본: NH투자 1월 옵션 만기일 매도 우세
+교정: NH투자 1월 옵션 만기일 매도 우세
+
+예시 9:
+주제 : 경제
+원본: NH투자 1월 옵션 만기일 매도 우세
+교정: NH투자 1월 옵션 만기일 매도 우세
 
 [|assistant|]'''
 
@@ -65,24 +91,28 @@ EXAONE_FEW_SHOT_TEMP = '''[|system|] You are EXAONE model from LG AI Research, a
 def main():
     logger.info('*** START ***')
 
-    model = AutoModelForCausalLM.from_pretrained(
-            "LGAI-EXAONE/EXAONE-3.0-7.8B-Instruct",
-            torch_dtype=torch.bfloat16,
-            trust_remote_code=True,
-            device_map="auto"
-        )
-    tokenizer = AutoTokenizer.from_pretrained("LGAI-EXAONE/EXAONE-3.0-7.8B-Instruct")
-    logger.info(f'Model & Tokenizer : LGAI-EXAONE/EXAONE-3.0-7.8B-Instruct')
+    # model = AutoModelForCausalLM.from_pretrained(
+    #         "LGAI-EXAONE/EXAONE-3.0-7.8B-Instruct",
+    #         torch_dtype=torch.bfloat16,
+    #         trust_remote_code=True,
+    #         device_map="auto"
+    #     )
+    # tokenizer = AutoTokenizer.from_pretrained("LGAI-EXAONE/EXAONE-3.0-7.8B-Instruct")
+    # logger.info(f'Model & Tokenizer : LGAI-EXAONE/EXAONE-3.0-7.8B-Instruct')
     
-    df = pd.read_csv("./resources/raw_data/train.csv")
+    df = pd.read_csv("./resources/processed/v2/train_noise_remove_llm.csv")
     logger.info(f"Train dataset size: {len(df)}")
     
     lst = []
     for _, row in df.iterrows():
         text = row['text']
-        logger.info(f"Origin text : {text}")
+        target_gen = row['target_gen']
+        text_topic = f"주제: {target_gen}\n원본: {text}"
+        logger.info(f"Origin text : {target_gen, text}")
+        exit()
+        
         try:
-            text_prompt = EXAONE_FEW_SHOT_TEMP.format(text)
+            text_prompt = EXAONE_FEW_SHOT_TEMP.format(text_topic)
             input_ids = tokenizer(text_prompt, return_tensors="pt")['input_ids']
             output = model.generate(
                 input_ids.to("cuda"),
@@ -100,7 +130,7 @@ def main():
     df['re_text'] = lst
     logger.info(f"Save generate data : {df}")
     
-    df.to_csv("./resources/processed/train_noise_remove_llm2.csv",encoding='utf-8-sig')
+    df.to_csv("./resources/processed/v2/train_noise_remove_llm.csv",encoding='utf-8-sig')
     
 
 if __name__ == "__main__":

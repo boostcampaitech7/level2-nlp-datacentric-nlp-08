@@ -114,7 +114,7 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained("LGAI-EXAONE/EXAONE-3.0-7.8B-Instruct")
     logger.info(f'Model & Tokenizer : LGAI-EXAONE/EXAONE-3.0-7.8B-Instruct')
     
-    df = pd.read_csv("./resources/processed/train_noisy.csv")
+    df = pd.read_csv("./resources/processed/train_not_noisy.csv")
     logger.info(f"Train dataset size: {len(df)}")
     
     lst = []
@@ -127,7 +127,7 @@ def main():
             output = model.generate(
                 input_ids.to("cuda"),
                 eos_token_id=tokenizer.eos_token_id,
-                max_new_tokens=64
+                max_new_tokens=128
             )
             pred = tokenizer.decode(output[0])
             pred = pred.split("[|assistant|]")[-1]
@@ -140,7 +140,7 @@ def main():
     df['gen_topic'] = lst
     logger.info(f"Save generate data : {df}")
     
-    df.to_csv("./resources/processed/train_noisy_generation_topic.csv", encoding='utf-8-sig', index=0)
+    df.to_csv("./resources/processed/train_not_noisy_generation_topic.csv", encoding='utf-8-sig', index=0)
     
 
 if __name__ == "__main__":

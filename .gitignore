@@ -6,6 +6,7 @@ venv/
 .venv_sh/
 code/
 checkpoint/
+resources/
 .idea/
 valid_bm25_scores
 .DS_Store
@@ -22,6 +23,8 @@ valid_bm25_scores
 *.json
 *.bin
 *.pickle
+*.txt
+*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
