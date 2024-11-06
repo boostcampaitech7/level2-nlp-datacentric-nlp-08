@@ -25,6 +25,8 @@ valid_bm25_scores
 *.pickle
 *.txt
 *.csv
+*.xlsx
+*.npy
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
