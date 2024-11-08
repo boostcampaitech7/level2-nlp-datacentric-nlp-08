@@ -74,5 +74,5 @@ for idx in tqdm(range(start_index, len(filtered_df)), initial=start_index, total
     # 결과를 데이터프레임에 추가
     processed_df = pd.concat([processed_df, pd.DataFrame({"text": [text], "back_translate_result": [result]})], ignore_index=True)
 
-# 모든 행 처리 완료 후 저장
+# 모든 행 처리 완료 후 저장.
 processed_df.to_csv(output_file, index=False)
