@@ -46,8 +46,7 @@ def backtranslate(text):
 # 데이터 로드 및 저장 파일 설정
 
 
-# input_file = "noisy_headline_filtered.csv"
-input_file = "resources/pre_processed_data/train_20241104_not_noisy_only.csv"
+input_file = "noisy_headline_filtered.csv"
 output_file = "not_noisy_only_backtranslated_output.csv"
 
 # 중간 결과 파일이 있으면 로드해서 이어서 진행
