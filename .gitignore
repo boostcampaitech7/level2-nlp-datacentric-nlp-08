@@ -9,7 +9,6 @@ checkpoint/
 .idea/
 valid_bm25_scores
 .DS_Store
-*.pdf
 *.jpg
 *.zip
 *.csv
